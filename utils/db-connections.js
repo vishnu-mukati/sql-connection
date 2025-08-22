@@ -71,6 +71,20 @@ connection.connect((err) => {
         }
         console.log('payments table is created');
     });
+
+    const busQuery = `CREATE TABLE IF NOT EXISTS bus (
+       id INT  AUTO_INCREMENT PRIMARY KEY,
+       busName VARCHAR(50),
+       availableSeats INT
+    )`;
+    connection.execute(busQuery,(err)=>{
+        if(err){
+            console.log('Error creating bus:',err);
+            connection.end();
+            return;
+        }
+        console.log("bus table is created");
+    })
 })
 
 
