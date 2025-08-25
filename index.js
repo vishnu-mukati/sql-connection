@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.send('hello world');
 })
 
-db.sync({force:true}).then(()=>{
+db.sync().then(()=>{
     app.listen(3000,(err)=>{
     console.log("server is running");
 })

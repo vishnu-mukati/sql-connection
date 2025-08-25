@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post('/',busController.addBusEntries);
 router.get('/available/:seats',busController.getBusEntries);
+router.get('/',busController.getBusEntries);
 
 
 module.exports = router;
