@@ -7,9 +7,10 @@ const { Op } = require("sequelize");
 
 const addBusEntries = (async (req, res) => {
     try {
-        const { busName, availableSeats } = req.body;
+        const { busNumber, totalSeats, availableSeats } = req.body;
         const response = await busModal.create({
-            busName: busName,
+            busNumber: busNumber,
+            totalSeats: totalSeats,
             availableSeats: availableSeats
         })
         res.status(200).send(response);
