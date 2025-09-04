@@ -5,7 +5,7 @@ const userRouter = require('./routes/userRoutes');
 const busRouter = require('./routes/busRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 
-
+const models = require('./models/');
 
 const app = express();
 

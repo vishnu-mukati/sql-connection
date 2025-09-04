@@ -1,5 +1,7 @@
 const db = require('../utils/db-connections');
 const busModal = require('../models/bus');
+const Bookings = require('../models/bookings');
+const User  = require('../models/user');
 const { Op } = require("sequelize"); 
 
 
@@ -66,7 +68,32 @@ const getBusEntries = (async (req, res) => {
     // })
 })
 
+// Get All Bookings for a Specific Bus with User Details
+const getBusBookings = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const bookings = await Bookings.findAll({
+            where: { BusId: id },
+            attributes : { exclude: ['UserId', 'BusId', 'createdAt', 'updatedAt'] },
+            include: [{
+                model: User,
+                attributes: ['name', 'email']
+            }]
+        });
+        
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).send('No bookings found for this bus');
+        }
+        
+        res.status(200).json(bookings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching bus bookings');
+    }
+};
+
 module.exports = {
     addBusEntries,
-    getBusEntries
+    getBusEntries,
+    getBusBookings
 }

@@ -1,5 +1,7 @@
 const db = require('../utils/db-connections');
 const userModel = require('../models/user');
+const Bookings = require('../models/bookings');
+const Bus = require('../models/bus');
 
 const addUserEntries = (async (req, res) => {
 
@@ -26,14 +28,14 @@ const addUserEntries = (async (req, res) => {
     // })
 })
 
-const getUserEntries = (async(req, res) => {
-    try{
+const getUserEntries = (async (req, res) => {
+    try {
         const response = await userModel.findAll()
-        if(!response){
+        if (!response) {
             res.send(404).send('user not found');
         }
         res.status(200).json(response);
-    }catch(err){
+    } catch (err) {
 
     }
     // const retriveUserDataQuery = `SELECT * FROM users`;
@@ -50,8 +52,32 @@ const getUserEntries = (async(req, res) => {
     //     res.status(200).send(JSON.stringify(result));
     // })
 })
+const getUserBookings = async (req, res) => {
+    try {
+        console.log(Bookings.associations);
+        const { id } = req.params;
+        const bookings = await Bookings.findAll({
+            where: { UserId: Number(id) },
+          attributes: { exclude: ['UserId', 'BusId', 'createdAt', 'updatedAt'] },
+            include: [{
+                model: Bus,
+                attributes: ['busNumber']
+            }]
+        });
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).send('No bookings found for this user');
+        }
+
+        res.status(200).json(bookings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching user bookings', err.message);
+    }
+};
 
 module.exports = {
     addUserEntries,
-    getUserEntries
+    getUserEntries,
+    getUserBookings
 }
